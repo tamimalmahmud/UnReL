@@ -1,0 +1,33 @@
+model_family: phi
+
+#resume_from: none
+resume_from: checkpoints/SISA_ITr_4slices_epoch_10_phi/retain_shard4_1_forget01
+
+forget: forget03
+data_paths:
+  # - talmahmud/tofu_custom_split_SISA
+  - talmahmud/tofu_custom_split_SISA
+  - talmahmud/tofu_custom_split_SISA
+  - talmahmud/tofu_custom_split_SISA
+
+splits:
+  # - retain_shard4_1_forget01
+  - retain_shard4_2_forget01
+  - retain_shard4_3_forget01
+  - shard4_4
+
+batch_size: 4
+gradient_accumulation_steps: 4
+num_epochs: 10
+lr: 5e-5
+weight_decay: 0.01
+seed: 42
+
+save_dir: checkpoints/SISA_ITr_4slices_epoch_10_phi
+
+continual:
+  osl:
+    mrr: 0.10
+    trr: 0.85
+    cali_batches: 4
+    target_linear_only: true
