@@ -31,7 +31,7 @@ pip install datasets accelerate evaluate matplotlib hydra-core omegaconf peft ro
 ```
 Also, you may need to install additional updated libraries if required. 
 
-## Traditional Retraining from Scratch (Reference baseline)
+## Traditional retraining from scratch (reference baseline)
 
 To perform traditional retraining from scratch, run the following command:
 
@@ -48,7 +48,7 @@ Run the scoring module provided dataset directory inside the main function of th
 python autoscoring.py
 ```
 
-## Unlearning Ready Training
+## Unlearning ready training phase
 
 To train the model under UnReL, SISA, and APA, use the following command:
 
@@ -58,29 +58,41 @@ python UnReL_training.py --config-path /home/user_name/project_name/config --con
 ```
 For SISA
 ```bash
-python SISA_training.py --config-path /home/user_name/project_name/config --config-name Train_dp_SGD.yaml
+python SISA_P50_training.py --config-path /home/user_name/project_name/config --config-name SISA_P50_training.yaml
+python SISA_slices_ITr.py --config-path /home/user_name/project_name/config --config-name SISA_slices_ITr.yaml
+python SISA_aggregate.py --config-path /home/user_name/project_name/config --config-name SISA_aggregate.yaml
 ```
-Do necessary modification in Train_dp_MLM.yaml or Train_dp_SGD.yaml based on your hardware and GPU capacity. 
-
-## DP2Unlearning Fine-Tuning
-
-For DP2Unlearning fine-tuning, run:
-
+For APA
 ```bash
-python FT_BaseModel.py --config-path /home/user_name/project_name/config --config-name FT_BaseModel.yaml
+python APA_training.py --config-path /home/user_name/project_name/config --config-name APA_training.yaml
+python APA_aggregate.py --config-path /home/user_name/project_name/config --config-name APA_aggregate.yaml
 ```
-Do necessary modification to FT_BaseModel.yaml based on forgetting percentage (1%:retain99, 5%:retain95, or 10%:retain90)
 
-## Approximate Unlearning Baselines Fine-Tuning
+## Unlearning phase
+For UnReL
+```bash
+python UnReL_unlearning.py --config-path /home/user_name/project_name/config --config-name UnReL_unlearning.yaml
+```
+For SISA
+```bash
+python SISA_unlearning.py --config-path /home/user_name/project_name/config --config-name SISA_unlearning.yaml
+python SISA_aggregate.py --config-path /home/user_name/project_name/config --config-name SISA_aggregate.yaml
+```
+For APA
+```bash
+python APA_unlearning.py --config-path /home/user_name/project_name/config --config-name APA_unlearning.yaml
+python APA_aggregate.py --config-path /home/user_name/project_name/config --config-name APA_aggregate.yaml
+```
+Do necessary modifications to the config YAML files
 
-To perform approximate unlearning fine-tuning, execute the following:
-
+## Approximate Unlearning Baselines
+To perform approximate unlearning, execute the following:
 ```bash
 python forget.py --config-path /home/user_name/project_name/config --config-name forget.yaml
 ```
+Do necessary changes in the YAML file
 
 ## Evaluation
-
 To evaluate the models, use this command:
 
 ```bash
@@ -95,29 +107,10 @@ To aggregate the evaluation statistics, use:
 ```bash
 python aggregate_eval_stat.py --config-path /home/user_name/project_name/config --config-name aggregate_eval_stat.yaml
 ```
-
 Ensure you have the paths to your results:
-
 ```bash
 retain_result=${path_to_traditional_retraining_from_scratch}
 ckpt_result=${path_to_your_unlearned_method}
 ```
 
-## Beyond KS Test
-
-To run the Beyond KS Test, execute:
-
-```bash
-python Beyond_KS_test.py --config-path /home/user_name/project_name/config --config-name aggregate_eval_stat.yaml
-```
----------------------------------------------------------------------------------------------------------------------
-
-<small>The baseline methods are implemented from </small> [[1](https://locuslab.github.io/tofu/)]
-
-
-## ⚙️ Running the AutoScoring Tool
-
-Run the scoring module on your dataset directory:
-
-```bash
-python autoscoring.py
+<small>The baseline approximate methods are implemented from </small> [[1](https://locuslab.github.io/tofu/)]
